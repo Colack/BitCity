@@ -1,0 +1,7 @@
+# Gitignore for ruby
+
+.bundle
+log/*.log
+.tmp
+tmp
+save.dat
