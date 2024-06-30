@@ -54,4 +54,17 @@ class Player
   def change_items(items)
     @items = items
   end
+
+  def load(name, purse, happiness, health, energy, age, job, education, skills, items)
+    change_name(name)
+    change_purse(purse)
+    change_happiness(happiness)
+    change_health(health)
+    change_energy(energy)
+    change_age(age)
+    change_job(job)
+    change_education(education)
+    change_skills(skills)
+    change_items(items)
+  end
 end

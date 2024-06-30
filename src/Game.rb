@@ -3,9 +3,8 @@
 ### Text-Based-City Builder Game
 # This is a text-based city building game.
 
-require 'ruby_figlet'
-using RubyFiglet
-
+# Requirements
+require_relative 'Render'
 require_relative 'City'
 require_relative 'Player'
 # require_relative 'Events'
@@ -28,29 +27,38 @@ class Game
   end
 
   def render_title
-    title = RubyFiglet::Figlet.new 'Bit City', 'basic'
-    title.show
+    render_figlet('Game Name', 'big')
     puts "\nVersion: #{@version}\n"
     puts "By @colack\n\n"
-    puts "1. New Game\n2. Load Game\n3. Exit\n\n"
+    render_box('1. New Game')
+    render_box('2. Load Game')
+    render_box('3. Exit')
 
     print '> '
     input = gets.chomp
 
+    title_screen_options(input)
+  end
+
+  def title_screen_options(input)
     while input != '3'
       case input
       when '1'
         create_save
         break
       when '2'
-        # load_save
+
         break
       else
-        puts 'Invalid option. Please try again.'
-        print '> '
-        input = gets.chomp
+        input = reject_input
       end
     end
+  end
+
+  def reject_input
+    puts 'Invalid option. Please try again.'
+    print '> '
+    gets.chomp
   end
 
   def create_save
@@ -84,9 +92,14 @@ class Game
       save_data = save_file.read
       save_file.close
 
-      # Grab the player and city data from the save file
       player_data = save_data.split('PLAYER')[1]
       city_data = save_data.split('CITY')[1]
+
+      @player = Player.new
+      @city = City.new
+
+      @player.load(player_data)
+      @city.load(city_data)
     else
       throw_error('Save file not found.')
     end
@@ -94,6 +107,8 @@ class Game
 
   def save
     save_data = "PLAYER\n#{@player}\nCITY\n#{@city}"
+    File.open(@system_save_file, 'w') { |file| file.write(save_data) }
+    throw_info('Game Saved')
   end
 
   def start_game
